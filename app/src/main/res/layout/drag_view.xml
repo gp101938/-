@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0C0F1A"
+    android:id="@+id/main"
+    android:padding="16dp"
+    tools:context=".SBModeApplication">
+
+    <!-- 标题区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="双区域拖动控制器"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="#4CAF50"
+            android:paddingHorizontal="16dp"
+            android:text="保存坐标"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <!-- 坐标信息显示 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/tvArea1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#1E2535"
+            android:padding="12dp"
+            android:text="区域1: (0, 0)"
+            android:textColor="#8BC34A"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvArea2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#1E2535"
+            android:padding="12dp"
+            android:text="区域2: (0, 0)"
+            android:textColor="#FF9800"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- 拖动容器 -->
+    <com.gaopeng.test.cnm.DragContainerView
+        android:id="@+id/dragContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1E2535"
+        android:padding="8dp" />
+
+    <!-- 操作按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="#607D8B"
+            android:text="重置位置"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnLoad"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#2196F3"
+            android:text="加载位置"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</LinearLayout>
