@@ -1,5 +1,6 @@
 package com.gaopeng.test.cnm;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gaopeng.test.cnm.fangwuchu.SettingsActivity;
 import com.gaopeng.test.sbshujuku.KeyContract;
 import com.gaopeng.test.sbshujuku.KeyDatabaseHelper;
 import com.gaopeng.test.sbshujuku.KeyRecordHelper;
@@ -28,6 +30,9 @@ public class SBModeApplication extends AppCompatActivity {
     private KeyRecordHelper keyRecordHelper;
     private Uri newRecordUri;
 
+    private final Point originalA = new Point(124,370);
+    private final Point originalB = new Point(374,568);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,7 @@ public class SBModeApplication extends AppCompatActivity {
         Button btnSave = findViewById(R.id.btnSave);
         Button btnReset = findViewById(R.id.btnReset);
         Button btnLoad = findViewById(R.id.btnLoad);
+        Button fangwuchu = findViewById(R.id.fangwuchu);
         //dbHelper = new KeyDatabaseHelper(this);
         keyRecordHelper = new KeyRecordHelper(getContentResolver());
         // 初始化SharedPreferences
@@ -54,6 +60,8 @@ public class SBModeApplication extends AppCompatActivity {
             }
         });
 
+        fangwuchu.setOnClickListener(v -> fangwuchuswitch());
+
         // 保存按钮点击事件
         btnSave.setOnClickListener(v -> savePositions());
 
@@ -62,23 +70,13 @@ public class SBModeApplication extends AppCompatActivity {
 
         // 加载按钮点击事件
         btnLoad.setOnClickListener(v -> loadPositions());
-        savePositions();
         // 初始加载保存的位置
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            loadPositions(); // 延迟加载数据
-        }, 1000);
+        loadPositions(); // 延迟加载数据
     }
 
     private void savePositions() {
         Point pos1 = dragContainer.getViewPosition(1);
         Point pos2 = dragContainer.getViewPosition(2);
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("area1_x", pos1.x);
-        editor.putInt("area1_y", pos1.y);
-        editor.putInt("area2_x", pos2.x);
-        editor.putInt("area2_y", pos2.y);
-        editor.apply();
         String packageName = getApplicationContext().getPackageName();
         Log.d("cnm","packageName->"+packageName);
 
@@ -106,15 +104,7 @@ public class SBModeApplication extends AppCompatActivity {
         );
         Log.d("shabi","newRecordUri->"+newRecordUri);
         Cursor cursor = keyRecordHelper.getKeyRecordByPkg(packageName);
-        if(cursor == null){
-            Log.d("shabi","cursor第一次进来 空，插入数据");
-            newRecordUri = keyRecordHelper.addKeyRecord(
-                    packageName,
-                    singleA, singleB,
-                    doubleADown, doubleAUp,
-                    doubleBDown, doubleBUp
-            );
-        }else{
+        if(cursor != null){
             Log.d("shabi","cursor不是第一次进来 不为空，更新数据");
             int updatedRows = keyRecordHelper.updateKeyRecord(
                     newRecordUri,
@@ -122,6 +112,7 @@ public class SBModeApplication extends AppCompatActivity {
                     doubleADown, doubleAUp,
                     doubleBDown, doubleBUp
             );
+            cursor.close();
         }
         Toast.makeText(this, "坐标已保存!", Toast.LENGTH_SHORT).show();
     }
@@ -165,6 +156,9 @@ public class SBModeApplication extends AppCompatActivity {
                     KeyContract.KeyEntry.COLUMN_SINGLE_B_Y
             );
         }
+        if (cursor != null) {
+            cursor.close();
+        }
 
         if (area1_x != -1 && area1_y != -1) {
             dragContainer.setViewPositions(1, fetchedSingleA.x, fetchedSingleA.y);
@@ -186,8 +180,8 @@ public class SBModeApplication extends AppCompatActivity {
         String packageName = getApplicationContext().getPackageName();
         Log.d("shabi","packageName->"+packageName);
 
-        Point singleA = new Point(124, 340);
-        Point singleB = new Point(374, 568);
+        Point singleA = originalA;
+        Point singleB = originalB;
         Point doubleADown = new Point(50, 300);
         Point doubleAUp = new Point(50, 350);
         Point doubleBDown = new Point(200, 300);
@@ -204,6 +198,10 @@ public class SBModeApplication extends AppCompatActivity {
                 doubleADown, doubleAUp,
                 doubleBDown, doubleBUp
         );
+    }
+
+    private void fangwuchuswitch(){
+        startActivity(new Intent(SBModeApplication.this, SettingsActivity.class));
     }
 
 

@@ -70,7 +70,6 @@ public class DragContainerView extends FrameLayout {
     }
 
     public void setViewPositions(int id, int x, int y) {
-        Log.d("shabi","(x,y)-    "+x+","+y + "  view1" + view1 + "," + view2);
         if (id == 1) {
             view1.setX(x);
             view1.setY(y);

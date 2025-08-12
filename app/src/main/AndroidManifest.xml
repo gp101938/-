@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <permission
         android:name="com.example.keyprovider.READ_KEY_DATA"
         android:protectionLevel="signature" />
@@ -38,7 +42,34 @@
         <path-permission
             android:pathPrefix="/records"
             android:permission="com.example.PERMISSION_WRITE_RECORDS"/>
-    </provider>
+        </provider>
+
+        <activity android:name="com.gaopeng.test.cnm.fangwuchu.SettingsActivity" />
+
+        <service
+            android:name=".fangwuchu.ForegroundService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false"
+            android:stopWithTask="false"
+            tools:ignore="ForegroundServicePermission">
+            <meta-data
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="resident_service" />
+        </service>
+
+        <receiver
+            android:name="com.gaopeng.test.cnm.fangwuchu.StopServiceReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.gaopeng.test.cnm.fangwuchu.STOP_SERVICE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_service" />
+
     </application>
 
 </manifest>
