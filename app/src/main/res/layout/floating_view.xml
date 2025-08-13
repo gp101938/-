@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/floating_view.xml -->
+<!-- res/layout/floating_view.xml -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <!-- 小球1 -->
+    <View
+        android:id="@+id/ball1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/ball_shape"
+        android:elevation="10dp"/>
+
+    <!-- 小球2 -->
+    <View
+        android:id="@+id/ball2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="400dp"
+        android:background="@drawable/ball_shape"
+        android:elevation="10dp"/>
+
+</FrameLayout>

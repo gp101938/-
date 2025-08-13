@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,8 +17,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gaopeng.test.cnm.fangwuchu.SettingsActivity;
+import com.gaopeng.test.cnm.xuanfu.FloatingBallsService;
 import com.gaopeng.test.sbshujuku.KeyContract;
-import com.gaopeng.test.sbshujuku.KeyDatabaseHelper;
 import com.gaopeng.test.sbshujuku.KeyRecordHelper;
 
 public class SBModeApplication extends AppCompatActivity {
@@ -26,7 +26,6 @@ public class SBModeApplication extends AppCompatActivity {
     private DragContainerView dragContainer;
     private TextView tvArea1, tvArea2;
     private SharedPreferences prefs;
-    private KeyDatabaseHelper dbHelper;
     private KeyRecordHelper keyRecordHelper;
     private Uri newRecordUri;
 
@@ -46,7 +45,7 @@ public class SBModeApplication extends AppCompatActivity {
         Button btnReset = findViewById(R.id.btnReset);
         Button btnLoad = findViewById(R.id.btnLoad);
         Button fangwuchu = findViewById(R.id.fangwuchu);
-        //dbHelper = new KeyDatabaseHelper(this);
+        Button xuanfu = findViewById(R.id.xuanfu);
         keyRecordHelper = new KeyRecordHelper(getContentResolver());
         // 初始化SharedPreferences
         prefs = getSharedPreferences("DragPositions", MODE_PRIVATE);
@@ -61,6 +60,7 @@ public class SBModeApplication extends AppCompatActivity {
         });
 
         fangwuchu.setOnClickListener(v -> fangwuchuswitch());
+        xuanfu.setOnClickListener(v -> xuanfu());
 
         // 保存按钮点击事件
         btnSave.setOnClickListener(v -> savePositions());
@@ -74,6 +74,7 @@ public class SBModeApplication extends AppCompatActivity {
         loadPositions(); // 延迟加载数据
     }
 
+
     private void savePositions() {
         Point pos1 = dragContainer.getViewPosition(1);
         Point pos2 = dragContainer.getViewPosition(2);
@@ -86,16 +87,6 @@ public class SBModeApplication extends AppCompatActivity {
         Point doubleAUp = new Point(50, 350);
         Point doubleBDown = new Point(200, 300);
         Point doubleBUp = new Point(200, 350);
-//        KeyRecord record1 = new KeyRecord(packageName,
-//                singleA, singleB,
-//                doubleADown, doubleAUp,
-//                doubleBDown, doubleBUp);
-//        KeyRecord fetched = dbHelper.getKeyRecord(packageName);
-//        if(fetched == null){
-//            dbHelper.addKeyRecord(record1);
-//        }else {
-//            dbHelper.updateKeyRecord(record1);
-//        }
         newRecordUri = keyRecordHelper.addKeyRecord(
                 packageName,
                 singleA, singleB,
@@ -204,6 +195,21 @@ public class SBModeApplication extends AppCompatActivity {
         startActivity(new Intent(SBModeApplication.this, SettingsActivity.class));
     }
 
+    private void xuanfu(){
+        android.util.Log.d("shabi","启动悬浮球");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                !Settings.canDrawOverlays(this)) {
+
+            // 请求权限
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            // 2. 正确启动服务
+            startService(new Intent(this, FloatingBallsService.class));
+        }
+    }
 
     @Override
     protected void onPause() {
